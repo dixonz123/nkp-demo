@@ -1,0 +1,424 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nkpdemo-configmap
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NKP Testing Application</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Inter', 'sans-serif'],
+                        },
+                        colors: {
+                            charcoal: {
+                                900: '#121212',
+                                800: '#1e1e1e',
+                                700: '#2d2d2d',
+                            },
+                            nkppurple: {
+                                100: '#f3e8ff',
+                                200: '#e9d5ff',
+                                300: '#d8b4fe',
+                                400: '#c084fc',
+                                500: '#a855f7',
+                                600: '#9333ea',
+                                700: '#7e22ce',
+                                800: '#6b21a8',
+                                900: '#581c87',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            /* Custom scrollbar to match the dark/purple theme */
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #121212; 
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #6b21a8; 
+                border-radius: 10px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #9333ea; 
+            }
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #1e1e1e; /* Dark Charcoal */
+                color: #d8b4fe; /* Default purple text */
+            }
+            /* Bubble Card Style */
+            .bubble-card {
+                background: linear-gradient(145deg, rgba(88, 28, 135, 0.4), rgba(45, 45, 45, 0.4));
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(168, 85, 247, 0.3);
+                border-radius: 1.5rem; /* Large border radius for 'bubble' look */
+                box-shadow: 0 8px 32px 0 rgba(107, 33, 168, 0.15);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .bubble-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 40px 0 rgba(107, 33, 168, 0.25);
+                border-color: rgba(168, 85, 247, 0.6);
+            }
+        </style>
+    </head>
+
+    <body class="h-screen flex overflow-hidden selection:bg-nkppurple-500 selection:text-white">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-charcoal-900 border-r border-nkppurple-900/50 hidden md:flex flex-col">
+            <div class="p-6 flex items-center justify-center border-b border-nkppurple-900/50">
+                <div class="w-12 h-12 bg-nkppurple-600 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                </div>
+                <span class="ml-3 font-bold text-xl text-nkppurple-200 tracking-wider">NKP<br><span class="text-sm font-normal text-nkppurple-400">Labs</span></span>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a href="#" class="flex items-center px-4 py-3 bg-nkppurple-900/40 text-nkppurple-100 rounded-2xl transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-nkppurple-400 hover:bg-nkppurple-900/20 hover:text-nkppurple-200 rounded-2xl transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Test Runs
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-nkppurple-400 hover:bg-nkppurple-900/20 hover:text-nkppurple-200 rounded-2xl transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Analytics
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-nkppurple-400 hover:bg-nkppurple-900/20 hover:text-nkppurple-200 rounded-2xl transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-nkppurple-900/50">
+                <div class="flex items-center p-3 bubble-card">
+                    <div class="w-10 h-10 rounded-full bg-nkppurple-700 flex items-center justify-center text-white font-bold">JD</div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-nkppurple-100">Jane Doe</p>
+                        <p class="text-xs text-nkppurple-400">Test Engineer</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-screen overflow-hidden">
+            
+            <!-- Top Header -->
+            <header class="flex items-center justify-between p-6 lg:p-8 bg-charcoal-800/50 backdrop-blur-sm border-b border-nkppurple-900/30 sticky top-0 z-10">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button class="md:hidden mr-4 text-nkppurple-400 hover:text-nkppurple-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <h1 class="text-2xl lg:text-3xl font-bold text-nkppurple-200 tracking-tight">NKP testing application</h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-nkppurple-400 hover:text-nkppurple-200 bg-charcoal-900 rounded-full border border-nkppurple-800/50 relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-nkppurple-500 rounded-full animate-ping"></span>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-nkppurple-500 rounded-full"></span>
+                    </button>
+                    <button class="px-4 py-2 bg-nkppurple-600 hover:bg-nkppurple-500 text-white rounded-full text-sm font-medium transition-colors shadow-[0_0_10px_rgba(147,51,234,0.4)]">
+                        New Test Run
+                    </button>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8">
+                
+                <!-- Stats Overview Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Stat Bubble 1 -->
+                    <div class="bubble-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-nkppurple-300 font-medium text-sm">Total Tests Run</h3>
+                            <div class="p-2 bg-nkppurple-900/50 rounded-full text-nkppurple-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-nkppurple-100">14,239</div>
+                            <div class="text-sm text-green-400 font-medium bg-green-400/10 px-2 py-1 rounded-lg flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                12%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat Bubble 2 -->
+                    <div class="bubble-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-nkppurple-300 font-medium text-sm">Pass Rate</h3>
+                            <div class="p-2 bg-nkppurple-900/50 rounded-full text-green-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-nkppurple-100">94.8%</div>
+                            <div class="text-sm text-nkppurple-400 font-medium">Last 30 days</div>
+                        </div>
+                        <!-- Mini progress bar -->
+                        <div class="w-full bg-charcoal-900 rounded-full h-1.5 mt-4">
+                            <div class="bg-green-400 h-1.5 rounded-full" style="width: 94.8%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Stat Bubble 3 -->
+                    <div class="bubble-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-nkppurple-300 font-medium text-sm">Active Environments</h3>
+                            <div class="p-2 bg-nkppurple-900/50 rounded-full text-nkppurple-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-nkppurple-100">8</div>
+                            <div class="flex -space-x-2">
+                                <div class="w-6 h-6 rounded-full bg-nkppurple-600 border border-charcoal-800"></div>
+                                <div class="w-6 h-6 rounded-full bg-nkppurple-500 border border-charcoal-800"></div>
+                                <div class="w-6 h-6 rounded-full bg-nkppurple-400 border border-charcoal-800"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat Bubble 4 -->
+                    <div class="bubble-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-nkppurple-300 font-medium text-sm">Failed Nodes</h3>
+                            <div class="p-2 bg-red-900/30 rounded-full text-red-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-red-300">3</div>
+                            <div class="text-sm text-red-400 font-medium bg-red-400/10 px-2 py-1 rounded-lg">Needs Attention</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area: Chart & List -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Chart Section -->
+                    <div class="lg:col-span-2 bubble-card">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-nkppurple-200">Execution Velocity</h2>
+                            <select class="bg-charcoal-900 border border-nkppurple-800 text-nkppurple-300 text-sm rounded-xl focus:ring-nkppurple-500 focus:border-nkppurple-500 block p-2 outline-none">
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                        <div class="relative h-72 w-full">
+                            <canvas id="velocityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity List -->
+                    <div class="bubble-card">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-nkppurple-200">Recent Activity</h2>
+                            <button class="text-nkppurple-400 hover:text-nkppurple-200 text-sm font-medium">View All</button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- Activity Item 1 -->
+                            <div class="flex items-start">
+                                <div class="mt-1 w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-nkppurple-100">Regression Suite Alpha</p>
+                                    <p class="text-xs text-nkppurple-400 mt-1">Completed successfully in 4m 12s</p>
+                                    <p class="text-xs text-nkppurple-500 mt-1">2 mins ago</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Activity Item 2 -->
+                            <div class="flex items-start">
+                                <div class="mt-1 w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-nkppurple-100">API Gateway Integration</p>
+                                    <p class="text-xs text-red-300 mt-1">Failed on endpoint /v2/auth</p>
+                                    <p class="text-xs text-nkppurple-500 mt-1">15 mins ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Activity Item 3 -->
+                            <div class="flex items-start">
+                                <div class="mt-1 w-2.5 h-2.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]"></div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-nkppurple-100">UI Cross-browser Test</p>
+                                    <p class="text-xs text-yellow-300 mt-1">Paused by User JD</p>
+                                    <p class="text-xs text-nkppurple-500 mt-1">1 hour ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Activity Item 4 -->
+                            <div class="flex items-start">
+                                <div class="mt-1 w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-nkppurple-100">Nightly Build Check</p>
+                                    <p class="text-xs text-nkppurple-400 mt-1">All 452 tests passed</p>
+                                    <p class="text-xs text-nkppurple-500 mt-1">6 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Activity Item 5 -->
+                            <div class="flex items-start">
+                                <div class="mt-1 w-2.5 h-2.5 rounded-full bg-nkppurple-500 animate-pulse shadow-[0_0_8px_rgba(168,85,247,0.6)]"></div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-nkppurple-100">Load Testing Node B</p>
+                                    <p class="text-xs text-nkppurple-300 mt-1">Running (68% complete)</p>
+                                    <p class="text-xs text-nkppurple-500 mt-1">Started 12 mins ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Environment Status -->
+                <div class="mt-8 bubble-card">
+                    <h2 class="text-xl font-bold text-nkppurple-200 mb-6">NKP Target Environments</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl bg-charcoal-900 border border-nkppurple-900 flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-bold text-nkppurple-200">Production-US-East</p>
+                                <p class="text-xs text-nkppurple-400">v2.4.1-stable</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-900/50 text-green-400 border border-green-800">Healthy</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-charcoal-900 border border-nkppurple-900 flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-bold text-nkppurple-200">Staging-Cluster-1</p>
+                                <p class="text-xs text-nkppurple-400">v2.5.0-rc2</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-900/50 text-green-400 border border-green-800">Healthy</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-charcoal-900 border border-red-900/50 flex items-center justify-between relative overflow-hidden">
+                            <div class="absolute inset-0 bg-red-500/5 animate-pulse"></div>
+                            <div class="relative z-10">
+                                <p class="text-sm font-bold text-nkppurple-200">Dev-Sandbox-A</p>
+                                <p class="text-xs text-nkppurple-400">v2.5.0-alpha</p>
+                            </div>
+                            <span class="relative z-10 px-2 py-1 text-xs font-semibold rounded-full bg-red-900/50 text-red-400 border border-red-800">Degraded</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <footer class="mt-8 text-center text-xs text-nkppurple-600">
+                    &copy; 2026 NKP Labs. All rights reserved. System time: Wednesday, October 7, 2026.
+                </footer>
+            </div>
+        </main>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const ctx = document.getElementById('velocityChart').getContext('2d');
+                
+                // Gradient for the line chart fill
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(168, 85, 247, 0.5)'); // purple-500 transparent
+                gradient.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
+
+                const velocityChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Tests Executed',
+                            data: [1200, 1900, 1500, 2200, 1800, 800, 950],
+                            borderColor: '#a855f7', // purple-500
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#d8b4fe', // purple-300
+                            pointBorderColor: '#581c87', // purple-900
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.4 // Smooth curves
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(30, 30, 30, 0.9)',
+                                titleColor: '#d8b4fe',
+                                bodyColor: '#e9d5ff',
+                                borderColor: 'rgba(168, 85, 247, 0.3)',
+                                borderWidth: 1,
+                                padding: 10,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + ' tests';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(107, 33, 168, 0.1)', // Subtle purple grid lines
+                                    drawBorder: false,
+                                },
+                                ticks: {
+                                    color: '#a855f7', // purple-500 text for axis
+                                    font: {
+                                        family: "'Inter', sans-serif",
+                                        size: 11
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false,
+                                },
+                                ticks: {
+                                    color: '#a855f7',
+                                    font: {
+                                        family: "'Inter', sans-serif",
+                                        size: 11
+                                    }
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                    }
+                });
+            });
+        </script>
+    </body>
+    </html>
