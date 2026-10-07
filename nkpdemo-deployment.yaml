@@ -24,4 +24,4 @@ spec:
       volumes:
       - name: html-volume
         configMap:
-          name: nkpdemo-configmap.yaml
+          name: nkpdemo-configmap
